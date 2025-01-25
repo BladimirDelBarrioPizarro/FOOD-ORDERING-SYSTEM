@@ -3,10 +3,8 @@ package com.food.ordernig.system.order.service.domain.entity;
 import com.food.ordering.system.domain.entity.BaseEntity;
 import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.domain.valueobject.ProductId;
-import lombok.Data;
 
 
-@Data
 public class Product extends BaseEntity<ProductId> {
     private String name;
     private Money price;
@@ -20,5 +18,13 @@ public class Product extends BaseEntity<ProductId> {
     public void updateWithConfirmedNameAndPrice(String name, Money price) {
         this.name = name;
         this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Money getPrice() {
+        return price;
     }
 }
