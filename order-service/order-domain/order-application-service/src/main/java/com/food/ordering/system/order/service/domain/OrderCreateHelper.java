@@ -81,6 +81,5 @@ public class OrderCreateHelper {
         }
         log.info("Order is saved with id: {}", orderResult.getId().getValue());
         return orderResult;
-
     }
 }
