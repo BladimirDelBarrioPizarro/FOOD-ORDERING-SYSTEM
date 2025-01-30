@@ -32,6 +32,7 @@ public class OrderCreateCommandHandler {
 
     private final RestaurantRepository restaurantRepository;
 
+<<<<<<< HEAD
     private final OrderDataMapper orderDataMapper;
 
     public OrderCreateCommandHandler(OrderDomainService orderDomainService,
@@ -42,6 +43,11 @@ public class OrderCreateCommandHandler {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
+=======
+
+    public OrderCreateCommandHandler(OrderCreateHelper orderCreateHelper, OrderDataMapper orderDataMapper, OrderCreatedPaymentRequestMessagePublisher orderCreatedPaymentRequestMessagePublisher) {
+        this.orderCreateHelper = orderCreateHelper;
+>>>>>>> publish-event-option-1
         this.orderDataMapper = orderDataMapper;
     }
 
