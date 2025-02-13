@@ -9,6 +9,7 @@ import com.food.ordernig.system.order.service.domain.valueobject.TrackingId;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 public class Order extends AggregateRoot<OrderId> {
@@ -99,7 +100,7 @@ public class Order extends AggregateRoot<OrderId> {
 
     private void updateFailureMessages(List<String> failureMessages) {
         if (this.failureMessages != null && failureMessages != null) {
-            this.failureMessages.addAll(failureMessages.stream().filter(message -> !message.isEmpty()).toList());
+            this.failureMessages.addAll(failureMessages.stream().filter(message -> !message.isEmpty()).collect(Collectors.toList()));
         }
         if (this.failureMessages == null) {
             this.failureMessages = failureMessages;
