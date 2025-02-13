@@ -1,60 +1,44 @@
-# Documentación para Levantar un Clúster de Kafka con Docker Compose
+## Documentation to Set Up a Kafka Cluster with Docker Compose
 
-## Requisitos Previos
+## Prerequisites
 
-- Docker y Docker Compose instalados en el sistema.
-- Acceso a los archivos de configuración `common.yml`, `zookeeper.yml`, `kafka_cluster.yml` e `init_kafka.yml`.
+- Docker and Docker Compose installed on the system.
+- Access to the configuration files `common.yml`, `zookeeper.yml`, `kafka_cluster.yml`, and `init_kafka.yml`.
 
-## Pasos para Iniciar el Clúster de Kafka
+## Steps to Start the Kafka Cluster
 
-### 1. Levantar Zookeeper
+### 1. Start Zookeeper
 
-Ejecutar el siguiente comando para iniciar Zookeeper:
+Run the following command to start Zookeeper:
 
-```sh
+```
 docker-compose -f common.yml -f zookeeper.yml up
 ```
 
-Para verificar que Zookeeper está corriendo, ejecutar:
+To verify that Zookeeper is running, execute:
 
-```sh
+```
 echo ruok | nc localhost 2181
 ```
 
-Si Zookeeper está funcionando correctamente, debería responder con `imok`.
+If Zookeeper is functioning correctly, it should respond with imok.
 
-### 2. Levantar el Clúster de Kafka
+2. Start the Kafka Cluster Run the following command to start the Kafka cluster:
 
-Ejecutar el siguiente comando para iniciar el clúster de Kafka:
-
-```sh
+```
 docker-compose -f common.yml -f kafka_cluster.yml up
 ```
 
-### 3. Inicializar Kafka
+3. Initialize Kafka Run the following command to initialize Kafka:
 
-Ejecutar el siguiente comando para inicializar Kafka:
-
-```sh
+```
 docker-compose -f common.yml -f init_kafka.yml up
 ```
 
-### 4. Acceder al Administrador de Kafka
+4. Access the Kafka Manager Once the cluster is up and running, you can access the Kafka management interface at:
 
-Una vez que el clúster está en funcionamiento, se puede acceder a la interfaz de administración de Kafka en:
+http://localhost:9000/
 
-[http://localhost:9000/](http://localhost:9000/)
+Additional Notes To stop the services, you can use docker-compose down for each corresponding step.
 
-## Notas Adicionales
-
-- Para detener los servicios, se puede utilizar `docker-compose down` en cada paso correspondiente.
-- Se recomienda revisar los logs de los contenedores para verificar que todo está funcionando correctamente.
-
----
-**Autor:** Bladimir del Barrio Pizarro
-**Fecha:** 02/02/2025
-
-
-
-
-------------------------------------------------------------
+It is recommended to check the container logs to ensure everything is running correctly.

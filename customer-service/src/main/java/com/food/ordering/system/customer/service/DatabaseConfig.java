@@ -19,13 +19,12 @@ public class DatabaseConfig {
         DataSourceInitializer initializer = new DataSourceInitializer();
         initializer.setDataSource(dataSource);
 
-        // Configura los scripts que deseas ejecutar
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("init-schema.sql"));
         populator.addScript(new ClassPathResource("init-data.sql"));
 
         initializer.setDatabasePopulator(populator);
-        initializer.setEnabled(true); // Asegúrate de que esté habilitado
+        initializer.setEnabled(true);
 
         return initializer;
     }
