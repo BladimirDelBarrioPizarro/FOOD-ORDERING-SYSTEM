@@ -9,3 +9,4 @@ public class CreditEntityId extends BaseId<UUID> {
         super(value);
     }
 }
+
