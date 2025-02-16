@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 @Slf4j
 @Component
@@ -46,13 +47,8 @@ public class PaymentRequestHelper {
     public PaymentEvent persistPayment(PaymentRequest paymentRequest) {
         log.info("Received payment complete event for order id: {}",paymentRequest.getOrderId());
         Payment payment = paymentDataMapper.paymentRequestModelToPayment(paymentRequest);
-        CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
-        List<CreditHistory> creditHistories = getCreditHistory(payment.getCustomerId());
-        List<String> failureMessages = new ArrayList<>();
-        PaymentEvent paymentEvent = paymentDomainService
-                .validateAndInitiatePayment(payment,creditEntry,creditHistories,failureMessages);
-        persistDbObjects(payment, creditEntry, creditHistories, failureMessages);
-        return paymentEvent;
+        return processPayment(payment, (p, failures) ->
+                paymentDomainService.validateAndInitiatePayment(p, getCreditEntry(p.getCustomerId()), getCreditHistory(p.getCustomerId()), failures));
     }
 
     @Transactional
@@ -66,13 +62,8 @@ public class PaymentRequestHelper {
                     paymentRequest.getOrderId()+" could not be found!");
         }
         Payment payment = paymentResponse.get();
-        CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
-        List<CreditHistory> creditHistories = getCreditHistory(payment.getCustomerId());
-        List<String> failureMessages = new ArrayList<>();
-        PaymentEvent paymentEvent = paymentDomainService
-                .validateAndCancelPayment(payment,creditEntry,creditHistories,failureMessages);
-        persistDbObjects(payment,creditEntry,creditHistories,failureMessages);
-        return paymentEvent;
+        return processPayment(payment, (p, failures) ->
+                paymentDomainService.validateAndCancelPayment(p, getCreditEntry(p.getCustomerId()), getCreditHistory(p.getCustomerId()), failures));
     }
 
 
@@ -110,4 +101,18 @@ public class PaymentRequestHelper {
             creditHistoryRepository.save(creditHistories.get(creditHistories.size() -1));
         }
     }
+
+    private PaymentEvent processPayment(Payment payment,
+                                        BiFunction<Payment, List<String>, PaymentEvent> validationFunction) {
+        CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
+        List<CreditHistory> creditHistories = getCreditHistory(payment.getCustomerId());
+        List<String> failureMessages = new ArrayList<>();
+
+        PaymentEvent paymentEvent = validationFunction.apply(payment, failureMessages);
+
+        persistDbObjects(payment, creditEntry, creditHistories, failureMessages);
+
+        return paymentEvent;
+    }
+
 }
